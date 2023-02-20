@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "prisma.prisma",
+    "esbenp.prettier-vscode",
+    "csstools.postcss",
+    "irongeek.vscode-env",
+    "dbaeumer.vscode-eslint",
+    "antfu.iconify",
+    "alexcvzz.vscode-sqlite",
+    "bradlc.vscode-tailwindcss",
+    "editorconfig.editorconfig"
+  ]
+}
