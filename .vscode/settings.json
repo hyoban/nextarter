@@ -5,6 +5,8 @@
     "source.fixAll.eslint": true,
     "source.organizeImports": true
   },
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "javascript.preferences.importModuleSpecifier": "non-relative",
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   }
