@@ -12,16 +12,16 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <ThemeProvider>
-      <SessionProvider session={session}>
+    <SessionProvider session={session}>
+      <ThemeProvider>
         <Head>
           <title>Create T3 App</title>
         </Head>
         <main className="h-full w-full">
           <Component {...pageProps} />
         </main>
-      </SessionProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </SessionProvider>
   );
 };
 
