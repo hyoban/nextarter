@@ -16,15 +16,13 @@ export function LanguageSwitcher() {
       <DropdownMenuContent className="w-16 mt-3">
         <DropdownMenuRadioGroup>
           <DropdownMenuRadioItem value="zh-CN">
-            <Link href="/" locale="zh-CN">
-              {" "}
-              中文{" "}
+            <Link href="/" locale="zh-CN" className="w-full">
+              中文
             </Link>
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="en">
-            <Link href="/en" locale="en">
-              {" "}
-              English{" "}
+            <Link href="/en" locale="en" className="w-full">
+              English
             </Link>
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
