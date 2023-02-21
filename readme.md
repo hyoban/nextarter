@@ -12,3 +12,4 @@ A starter for Next.js projects.
 - next-theme
 - vscode settings and recommended extensions
 - @total-typescript/ts-reset
+- next-i18next

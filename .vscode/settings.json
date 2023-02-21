@@ -9,5 +9,7 @@
   "javascript.preferences.importModuleSpecifier": "non-relative",
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
-  }
+  },
+  "i18n-ally.localesPaths": ["public/locales"],
+  "i18n-ally.keystyle": "nested"
 }

@@ -4,6 +4,7 @@ import "@total-typescript/ts-reset";
 import { api } from "@/lib/utils";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import { appWithTranslation } from "next-i18next";
 import { ThemeProvider } from "next-themes";
 import { type AppType } from "next/app";
 import Head from "next/head";
@@ -26,4 +27,4 @@ const MyApp: AppType<{ session: Session | null }> = ({
   );
 };
 
-export default api.withTRPC(MyApp);
+export default api.withTRPC(appWithTranslation(MyApp));
