@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "@total-typescript/ts-reset";
 
 import { api } from "@/lib/utils";
 import { type Session } from "next-auth";

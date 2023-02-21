@@ -11,3 +11,4 @@ A starter for Next.js projects.
 - tailwindcss-icons
 - next-theme
 - vscode settings and recommended extensions
+- @total-typescript/ts-reset
