@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,12 +38,10 @@ export function ThemeSwitch() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline">
-          {ThemeMap[theme as keyof typeof ThemeMap].icon}
-        </Button>
+      <DropdownMenuTrigger asChild className="icon-btn">
+        {ThemeMap[theme as keyof typeof ThemeMap].icon}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40">
+      <DropdownMenuContent className="w-40 mt-3">
         <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
           {Object.keys(ThemeMap).map((key) => (
             <DropdownMenuRadioItem value={key} key={key}>

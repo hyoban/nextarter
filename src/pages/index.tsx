@@ -1,3 +1,4 @@
+import LanguageSwitcher from "@/components/generic/i18n";
 import ThemeSwitch from "@/components/generic/theme";
 import { Button } from "@/components/ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -28,6 +29,7 @@ const Home = () => {
         <div className="grow"></div>
         <AuthInfo />
         <ThemeSwitch />
+        <LanguageSwitcher />
       </header>
     </div>
   );
