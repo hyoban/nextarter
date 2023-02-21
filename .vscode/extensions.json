@@ -8,6 +8,7 @@
     "antfu.iconify",
     "alexcvzz.vscode-sqlite",
     "bradlc.vscode-tailwindcss",
-    "editorconfig.editorconfig"
+    "editorconfig.editorconfig",
+    "lokalise.i18n-ally"
   ]
 }
