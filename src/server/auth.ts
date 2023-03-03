@@ -1,4 +1,5 @@
 import { env } from "@/env.mjs";
+import { digestMessage } from "@/lib/utils";
 import { prisma } from "@/server/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { type GetServerSidePropsContext } from "next";
@@ -7,6 +8,7 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 
 /**
@@ -37,16 +39,63 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session({ session, user }) {
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+
+    session({ session, token }) {
       if (session.user) {
-        session.user.id = user.id;
+        session.user.id = token.id as string;
         // session.user.role = user.role; <-- put other properties on the session here
       }
       return session;
     },
   },
+  session: {
+    strategy: "jwt",
+  },
   adapter: PrismaAdapter(prisma),
   providers: [
+    CredentialsProvider({
+      // The name to display on the sign in form (e.g. "Sign in with...")
+      name: "Credentials",
+      // `credentials` is used to generate a form on the sign in page.
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      // You can pass any HTML attribute to the <input> tag through the object.
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        // Add logic here to look up the user from the credentials supplied
+        if (!credentials?.email) {
+          console.log("No credentials found");
+          return null;
+        }
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user) {
+          console.log("User not found");
+          return null;
+        }
+
+        if (user.passwordHash !== (await digestMessage(credentials.password))) {
+          console.log("Wrong password");
+          return null;
+        }
+
+        console.log("User found");
+        return user;
+      },
+    }),
+
     EmailProvider({
       server: env.EMAIL_SERVER,
       from: env.EMAIL_FROM,
@@ -64,6 +113,7 @@ export const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: "/auth/signin",
+    newUser: "/auth/new-user",
   },
 };
 

@@ -1,14 +1,19 @@
 import LanguageSwitcher from "@/components/generic/i18n";
 import ThemeSwitch from "@/components/generic/theme";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { api } from "@/lib/utils";
 import { signOut, useSession } from "next-auth/react";
-import { useTranslation } from "next-i18next";
+import { i18n, useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 const AuthInfo = () => {
   const { data: sessionData } = useSession();
-  const { t } = useTranslation("auth");
+  const [newPassword, setNewPassword] = useState("");
+  const { t } = useTranslation();
+  const updatePassword = api.auth.setPassword.useMutation();
 
   const router = useRouter();
 
@@ -18,16 +23,45 @@ const AuthInfo = () => {
       .catch((e) => console.error(e));
   };
 
+  const newUser = () => {
+    router.push("/auth/new-user").catch((e) => console.error(e));
+  };
+
   return (
     <div className="flex items-center justify-center gap-4">
-      <p>{sessionData && sessionData.user.email}</p>
+      {sessionData && <p>{sessionData.user.email}</p>}
+
+      {sessionData && (
+        <>
+          <Input
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+          <Button
+            variant="subtle"
+            className="w-40"
+            onClick={() => {
+              updatePassword.mutate({ password: newPassword });
+            }}
+          >
+            {t("change-password")}
+          </Button>
+        </>
+      )}
 
       <Button
         variant="subtle"
+        className="w-32"
         onClick={sessionData ? () => void signOut() : signin}
       >
         {sessionData ? t("sign-out") : t("sign-in")}
       </Button>
+
+      {!sessionData && (
+        <Button variant="subtle" onClick={newUser}>
+          {t("new-user")}
+        </Button>
+      )}
     </div>
   );
 };
@@ -48,9 +82,13 @@ const Home = () => {
 export default Home;
 
 export async function getStaticProps({ locale }: { locale: string }) {
+  if (process.env.NODE_ENV === "development") {
+    await i18n?.reloadResources();
+  }
+
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["auth"])),
+      ...(await serverSideTranslations(locale)),
       // Will be passed to the page component as props
     },
   };

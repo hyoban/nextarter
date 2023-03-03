@@ -1,45 +1,48 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { type CtxOrReq } from "next-auth/client/_utils";
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next";
 import { getCsrfToken } from "next-auth/react";
-import { useTranslation } from "next-i18next";
+import { i18n, useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export default function SignIn({
   csrfToken,
-}: {
-  csrfToken?: string | number | ReadonlyArray<string> | undefined;
-}) {
-  const { t } = useTranslation("auth");
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { t } = useTranslation();
   return (
-    <>
-      <form
-        method="post"
-        action="/api/auth/signin/email"
-        className="flex flex-col items-start justify-center h-full gap-4 w-56 mx-auto"
-      >
-        <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-        <Label htmlFor="email" className="font-bold">
-          {t("email-address")}
-        </Label>
-        <Input type="email" id="email" name="email" />
-        <Button type="submit" className="my-2">
-          {t("sign-in-with-email")}
-        </Button>
-      </form>
-    </>
+    <form
+      method="post"
+      action="/api/auth/callback/credentials"
+      className="h-screen flex flex-col gap-4 items-center justify-center"
+    >
+      <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+      <Label>
+        {t("email-address")}
+        <Input name="email" type="text" />
+      </Label>
+      <Label>
+        {t("password")}
+        <Input name="password" type="password" />
+      </Label>
+      <Button type="submit">{t("sign-in")}</Button>
+    </form>
   );
 }
 
 export async function getServerSideProps(
-  context: CtxOrReq & { locale: string }
+  context: GetServerSidePropsContext & { locale: string }
 ) {
-  const csrfToken = await getCsrfToken(context);
+  if (process.env.NODE_ENV === "development") {
+    await i18n?.reloadResources();
+  }
   return {
     props: {
-      csrfToken,
-      ...(await serverSideTranslations(context.locale, ["auth"])),
+      csrfToken: await getCsrfToken(context),
+      ...(await serverSideTranslations(context.locale)),
     },
   };
 }
